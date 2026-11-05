@@ -14,6 +14,7 @@ Rispondi in italiano, in modo diretto e pratico.
 - Pagine: `/` ufficiale, `/chi-sono`, `/corsi-e-lezioni`, `/faq`, `/prenota`, `/tesseramento` (segnaposto), `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
 - Menu: Chi sono -> `/chi-sono`, Corsi e Lezioni -> `/corsi-e-lezioni`, Sedi e Orari -> `/corsi-e-lezioni#orari`, F.A.Q. -> `/faq`. Footer Sedi -> `/corsi-e-lezioni#sedi`.
 - Componenti condivisi delle pagine interne: `PageHero` (banner mustard con h1) e `CtaFinale`.
+- Animazioni a scroll: pin con CSS sticky, ScrollTrigger solo come progresso (mai `pin: true`), scrub video 1.2 e testi 0.4, GSAP importato dinamicamente. Modelli: `ScrollStage` (bozza) e `ChiSonoScrollBanner`.
 - `/corsi-e-lezioni` legge orari e sedi delle formule da `orarioSettimanale()` e `sediPer()` in `lib/prenota/disponibilita.ts`: nessun orario duplicato. Gli slot `daConfermare` restano prenotabili ma non compaiono negli orari pubblici.
 - `/faq`: `<details>`/`<summary>`; le risposte TODO_MATTEO sono escluse dalla pagina e dal JSON-LD FAQPage, e una categoria senza domande visibili sparisce.
 - `content/copy.ts` lo legge anche la bozza a scroll: non rinominare gli export e tieni i campi strutturali (`h1Split`, `h1Accent`).
@@ -22,7 +23,7 @@ Rispondi in italiano, in modo diretto e pratico.
 ## Illustrazioni (`public/images/*.webp`, registro `ILLU` in `content/copy.ts`)
 Sfondo trasparente e tratto nero: sempre `object-contain`, proporzioni del file, niente bordi, ritagli o filtri. Sul nero vanno su un fondo mustard. `compleanno`, `the-quiver` e `colle-oppio` stanno sempre in un riquadro crema #f7f0de (`riquadro` in BannerPromo). Alt vuoto quando sono solo un accento. Mai la stessa illustrazione due volte nella stessa schermata.
 - Homepage: banner FISR solo loghi, senza illustrazione; lezioni inclusive `matteo-assistenza`; compleanni `compleanno`; sedi `the-quiver` e `colle-oppio`; tesseramento `tessera` sopra il titolo.
-- `/chi-sono`: banner `matteo-ciao`; metodo `matteo-adulti`, `matteo-assistenza`, `matteo-cinque`.
+- `/chi-sono`: banner a scroll `ChiSonoScrollBanner` (video `crescita-rail-scrub.mp4`, poster `crescita-rail-poster.webp`, ultimo fotogramma `crescita-rail-finale.webp` per reduced motion; `crescita-rail.mp4` e' l'originale con audio, non usarlo); metodo `matteo-adulti`, `matteo-assistenza`, `matteo-cinque`.
 - `/corsi-e-lezioni`: hero `matteo-ciao` (non `matteo-cinque`: e' gia' nella card Bambini subito sotto); per eta' Bambini `matteo-cinque` (una per le due card), Ragazzi `matteo-assistenza`, Adulti `matteo-adulti`; sedi `the-quiver`, `colle-oppio`; inclusive `inclusione-gruppo`; compleanni `compleanno`; `attrezzatura`, `pioggia`.
 - `/prenota`: conferma `matteo-cinque`; mese senza orari `calendario`; step Dati `attrezzatura` piccola.
 - `/faq`: accenti per categoria `pioggia` (Prenotazione), `tessera` (Tesseramento), `attrezzatura` (Attrezzatura e pagamenti, nascosta finche' tutte TODO).

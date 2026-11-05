@@ -5,7 +5,7 @@ import { Header } from "@/components/header";
 import { Boxed } from "@/components/Boxed";
 import { Rivela } from "@/components/Rivela";
 import { CtaFinale } from "@/components/sections/CtaFinale";
-import { PageHero } from "@/components/sections/PageHero";
+import { ChiSonoScrollBanner } from "@/components/sections/ChiSonoScrollBanner";
 import { FooterChiaro } from "@/components/sections/FooterChiaro";
 import { chiSono, daCompilare, meta } from "@/content/copy";
 
@@ -27,14 +27,8 @@ export default function ChiSonoPage() {
     <>
       <Header trasparente navCentrata boxed />
       <main>
-        {/* 1. Banner */}
-        <PageHero
-          h1={chiSono.h1}
-          h1Split={chiSono.h1Split}
-          testo={chiSono.intro}
-          cta={{ label: chiSono.cta, href: "/prenota" }}
-          immagine={chiSono.immagine}
-        />
+        {/* 1. Banner a scroll: il bambino sul rail diventa Matteo */}
+        <ChiSonoScrollBanner />
 
         {/* 2. Metodo */}
         <section id="metodo" className="w-full scroll-mt-20 bg-[#f4f4f4] py-20 lg:py-24">

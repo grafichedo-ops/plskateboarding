@@ -257,11 +257,20 @@ export const faqIgCollab = {
 
 export const chiSono = {
   h1: "CIAO, SONO MATTEO",
-  h1Split: 1, // "CIAO," in bianco
-  immagine: ILLU.matteoCiao,
+  h1Split: 1, // "CIAO," in bianco (non usato dal banner a scroll, che e' tutto ink)
   intro:
     "Insegno skateboard con un approccio educativo e inclusivo, a persone di tutte le età e di tutti i livelli.",
   cta: "Prenota la tua lezione",
+  /** Banner a scroll di /chi-sono (components/sections/ChiSonoScrollBanner.tsx). */
+  scroll: {
+    // Frasi di passaggio: decorative (aria-hidden), non sono titoli.
+    frasi: ["TUTTI COMINCIANO DA QUI.", "UNA SPINTA ALLA VOLTA."],
+    testo: `${CREDENZIALE_FISR}. Insegno skateboard con un approccio educativo e inclusivo, a persone di tutte le età e di tutti i livelli.`,
+    video: "/video/crescita-rail-scrub.mp4",
+    poster: "/images/crescita-rail-poster.webp",
+    // Ultimo fotogramma del video, per prefers-reduced-motion.
+    finale: { src: "/images/crescita-rail-finale.webp", w: 2036, h: 1016 },
+  },
   metodo: {
     h2: "IL METODO PUSH AND LEARN",
     blocchi: [
