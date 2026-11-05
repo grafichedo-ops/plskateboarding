@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { CalendarPlus, Download, ExternalLink } from "lucide-react";
 import { fileIcs, linkGoogle, type Evento } from "@/lib/prenota/agenda";
 import { dataEstesa } from "@/lib/prenota/date";
 import type { Slot } from "@/lib/prenota/disponibilita";
 import { SEDI } from "@/lib/prenota/regole";
+import { ILLU } from "@/content/copy";
 
 export function Conferma({
   codice,
@@ -33,6 +35,15 @@ export function Conferma({
 
   return (
     <div className="space-y-8">
+      {/* Il cinque e' obbligatorio, anche a prenotazione fatta. */}
+      <Image
+        src={ILLU.matteoCinque.src}
+        alt={ILLU.matteoCinque.alt}
+        width={ILLU.matteoCinque.w}
+        height={ILLU.matteoCinque.h}
+        sizes="(min-width: 640px) 288px, 70vw"
+        className="mx-auto h-auto w-full max-w-[288px] object-contain"
+      />
       <div className="rounded-card border-2 border-ink bg-white p-5 shadow-hard-lg">
         <p className="text-xs font-bold uppercase tracking-wide text-ink/70">Codice prenotazione</p>
         <p className="font-display text-2xl">{codice}</p>

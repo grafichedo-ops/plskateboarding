@@ -41,6 +41,15 @@ export function TesseramentoChiaro() {
 
       <Boxed className="relative z-20">
         <Rivela className="max-w-2xl lg:max-w-[52%]">
+          {/* Accento sopra il titolo, lontano dal prezzo e dalla foto (in basso a destra). */}
+          <Image
+            src={tesseramento.immagine.src}
+            alt=""
+            width={tesseramento.immagine.w}
+            height={tesseramento.immagine.h}
+            sizes="112px"
+            className="mb-6 h-auto w-24 object-contain lg:w-28"
+          />
           <SplitHeading
             text={tesseramento.h1}
             split={tesseramento.h1Split}

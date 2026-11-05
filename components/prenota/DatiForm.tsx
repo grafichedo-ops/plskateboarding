@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { AlertCircle } from "lucide-react";
 import { SceltaCard } from "@/components/prenota/SceltaCard";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,7 @@ import {
   type Prestito,
 } from "@/lib/prenota/dati";
 import type { FasciaId } from "@/lib/prenota/regole";
+import { ILLU } from "@/content/copy";
 
 /** Id DOM di un campo, usato anche per portarci il focus sul primo errore. */
 export const idCampo = (chiave: string) => `campo-${chiave.replace(/\./g, "-")}`;
@@ -212,6 +214,15 @@ export function DatiForm({
       )}
 
       <Blocco titolo="Attrezzatura">
+        {/* Accento piccolo: a 390px non deve stringere le scelte qui sotto. */}
+        <Image
+          src={ILLU.attrezzatura.src}
+          alt=""
+          width={ILLU.attrezzatura.w}
+          height={ILLU.attrezzatura.h}
+          sizes="80px"
+          className="h-auto w-20 object-contain sm:col-span-2"
+        />
         <SceltaPrestito
           chiave="tavola"
           domanda={coppia ? "Avete già una tavola a testa?" : "Hai già una tavola?"}

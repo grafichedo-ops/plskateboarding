@@ -3,18 +3,10 @@
 @tailwind utilities;
 
 /*
-  Cubano — font display/headline. Se public/fonts/Cubano.woff2 non c'e'
-  ancora, il browser fa un 404 su questa url e ricade sul fallback: il sito
-  gira lo stesso, solo con i titoli in sans. Appena metti il file lo prende
-  senza toccare codice.
+  Cubano — font display/headline. Il @font-face lo aggiunge app/layout.tsx
+  solo se public/fonts/Cubano.woff2 esiste: cosi' senza il file non c'e' un
+  404 in console a ogni pagina. Fallback: Lilita One (--font-sostituto).
 */
-@font-face {
-  font-family: "Cubano";
-  src: url("/fonts/Cubano.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   --font-cubano: "Cubano";

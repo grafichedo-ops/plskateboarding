@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { Inter, Lilita_One } from "next/font/google";
 import "./globals.css";
 
@@ -19,10 +21,13 @@ const sostituto = Lilita_One({
 
 // Cubano — font display/headline, licenza da acquistare/scaricare a parte.
 // NON passa da next/font/local: quello e' un import risolto a build-time e
-// fa fallire la compilazione se il .woff2 non c'e' ancora. Sta in un
-// @font-face dentro app/globals.css, che senza il file ricade su sans-serif
-// e lo prende da solo appena lo aggiungi in public/fonts/Cubano.woff2
-// (vedi public/fonts/README.md).
+// fa fallire la compilazione se il .woff2 non c'e' ancora. Il @font-face
+// viene scritto qui sotto solo se il file esiste (controllo lato server, alla
+// build): senza file niente richiesta e niente 404 in console. Dopo aver
+// aggiunto public/fonts/Cubano.woff2 basta una nuova build.
+const HA_CUBANO = existsSync(path.join(process.cwd(), "public", "fonts", "Cubano.woff2"));
+const CUBANO_CSS =
+  '@font-face{font-family:"Cubano";src:url("/fonts/Cubano.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}';
 
 export const metadata: Metadata = {
   title: "P&L Skateboarding — Lezioni e corsi di skate a Roma",
@@ -37,6 +42,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it" className={`${inter.variable} ${sostituto.variable}`}>
+      {HA_CUBANO && (
+        <head>
+          <style dangerouslySetInnerHTML={{ __html: CUBANO_CSS }} />
+        </head>
+      )}
       <body>{children}</body>
     </html>
   );

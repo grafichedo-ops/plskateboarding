@@ -23,7 +23,7 @@ export function FooterChiaro() {
             alt={footer.logo}
             width={896}
             height={826}
-            className="h-[120px] w-auto shrink-0 brightness-0 invert lg:h-[150px]"
+            className="h-[120px] w-auto shrink-0 self-start brightness-0 invert lg:h-[150px]"
           />
 
           <div className="grid w-full gap-10 sm:grid-cols-3 lg:max-w-[640px]">

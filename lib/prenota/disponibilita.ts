@@ -16,7 +16,16 @@ export type StatoGiorno = "disponibile" | "corso" | "assenza" | "chiuso";
 
 export type Giorno = { data: string; stato: StatoGiorno; slots: Slot[] };
 
-type Modello = { dow: number; inizio: string; fine: string; sede: string; tipo: Slot["tipo"]; fasce?: FasciaId[] };
+type Modello = {
+  dow: number;
+  inizio: string;
+  fine: string;
+  sede: string;
+  tipo: Slot["tipo"];
+  fasce?: FasciaId[];
+  /** Assunzione non ancora confermata (CLAUDE.md): prenotabile, ma non pubblicata negli orari. */
+  daConfermare?: boolean;
+};
 
 const QUIVER = "The Quiver";
 const COLLE = "Colle Oppio";
@@ -29,7 +38,7 @@ const SETTIMANA: Modello[] = [
   { dow: 5, inizio: "15:00", fine: "16:00", sede: COLLE, tipo: "privata" },
   { dow: 3, inizio: "17:00", fine: "18:00", sede: QUIVER, tipo: "corso", fasce: ["4-6"] },
   { dow: 3, inizio: "18:00", fine: "19:00", sede: QUIVER, tipo: "corso", fasce: ["7-12"] },
-  { dow: 3, inizio: "19:00", fine: "20:00", sede: QUIVER, tipo: "privata" },
+  { dow: 3, inizio: "19:00", fine: "20:00", sede: QUIVER, tipo: "privata", daConfermare: true },
   { dow: 4, inizio: "17:00", fine: "18:00", sede: QUIVER, tipo: "corso", fasce: ["4-6"] },
   { dow: 4, inizio: "18:00", fine: "19:00", sede: QUIVER, tipo: "corso", fasce: ["7-12"] },
   { dow: 4, inizio: "19:00", fine: "20:00", sede: QUIVER, tipo: "corso", fasce: ["adulti"] },
@@ -96,4 +105,38 @@ export async function caricaDisponibilita(
     else giorni.push({ data: iso, stato: slots.some((s) => s.tipo === "corso") ? "corso" : "disponibile", slots });
   }
   return giorni;
+}
+
+const NOMI_GIORNO = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+
+export type FasciaOraria = { inizio: string; fine: string; tipo: Slot["tipo"]; fasce?: FasciaId[] };
+
+/**
+ * Orario settimanale pubblico (pagina /corsi-e-lezioni), dalla stessa
+ * SETTIMANA del calendario: niente dati duplicati. Esclude gli slot da
+ * confermare e unisce fasce consecutive identiche (Ven 14-15 e 15-16 -> 14-16).
+ */
+export function orarioSettimanale() {
+  const sedi = [...new Set(SETTIMANA.map((s) => s.sede))];
+  return sedi.map((sede) => {
+    const delSito = SETTIMANA.filter((s) => s.sede === sede && !s.daConfermare);
+    const giorni = [...new Set(delSito.map((s) => s.dow))].sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7));
+    return {
+      sede,
+      giorni: giorni.map((dow) => {
+        const fasce: FasciaOraria[] = [];
+        for (const s of delSito.filter((x) => x.dow === dow).sort((a, b) => a.inizio.localeCompare(b.inizio))) {
+          const prec = fasce[fasce.length - 1];
+          if (prec && prec.fine === s.inizio && prec.tipo === s.tipo && String(prec.fasce) === String(s.fasce)) prec.fine = s.fine;
+          else fasce.push({ inizio: s.inizio, fine: s.fine, tipo: s.tipo, fasce: s.fasce });
+        }
+        return { dow, nome: NOMI_GIORNO[dow], fasce };
+      }),
+    };
+  });
+}
+
+/** Sedi in cui si svolge una formula, dagli stessi slot (esclusi quelli da confermare). */
+export function sediPer(tipo: Slot["tipo"]) {
+  return [...new Set(SETTIMANA.filter((s) => s.tipo === tipo && !s.daConfermare).map((s) => s.sede))];
 }

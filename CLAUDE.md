@@ -11,9 +11,21 @@ Rispondi in italiano, in modo diretto e pratico.
 - Font: Cubano se esiste `public/fonts/Cubano.woff2`, altrimenti Lilita One; Inter per i testi.
 - Stile: illustrato + neo-brutalista (`.btn-press`, `.card-hard`, `shadow-hard-*`).
 - Accessibilita': radio veri o ruoli ARIA, focus visibile, stato mai affidato al solo colore.
-- Pagine: `/` ufficiale, `/chi-sono`, `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
+- Pagine: `/` ufficiale, `/chi-sono`, `/corsi-e-lezioni`, `/faq`, `/prenota`, `/tesseramento` (segnaposto), `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
+- Menu: Chi sono -> `/chi-sono`, Corsi e Lezioni -> `/corsi-e-lezioni`, Sedi e Orari -> `/corsi-e-lezioni#orari`, F.A.Q. -> `/faq`. Footer Sedi -> `/corsi-e-lezioni#sedi`.
+- Componenti condivisi delle pagine interne: `PageHero` (banner mustard con h1) e `CtaFinale`.
+- `/corsi-e-lezioni` legge orari e sedi delle formule da `orarioSettimanale()` e `sediPer()` in `lib/prenota/disponibilita.ts`: nessun orario duplicato. Gli slot `daConfermare` restano prenotabili ma non compaiono negli orari pubblici.
+- `/faq`: `<details>`/`<summary>`; le risposte TODO_MATTEO sono escluse dalla pagina e dal JSON-LD FAQPage, e una categoria senza domande visibili sparisce.
 - `content/copy.ts` lo legge anche la bozza a scroll: non rinominare gli export e tieni i campi strutturali (`h1Split`, `h1Accent`).
 - Banner homepage: `components/sections/BannerPromo.tsx` (varianti ink, card, mustard). `immagine: null` mostra il placeholder "Immagine da inserire".
+
+## Illustrazioni (`public/images/*.webp`, registro `ILLU` in `content/copy.ts`)
+Sfondo trasparente e tratto nero: sempre `object-contain`, proporzioni del file, niente bordi, ritagli o filtri. Sul nero vanno su un fondo mustard. Alt vuoto quando sono solo un accento. Mai la stessa illustrazione due volte nella stessa schermata.
+- Homepage: banner FISR `matteo-ciao` (solo finche' Chi sono usa la foto `matteo-con-bambino.png`); lezioni inclusive `matteo-assistenza`; compleanni `compleanno`; sedi `the-quiver` e `colle-oppio`; tesseramento `tessera` sopra il titolo.
+- `/chi-sono`: banner `matteo-ciao`; metodo `matteo-adulti`, `matteo-assistenza`, `matteo-cinque`.
+- `/corsi-e-lezioni`: hero `matteo-ciao` (non `matteo-cinque`: e' gia' nella card Bambini subito sotto); per eta' Bambini `matteo-cinque` (una per le due card), Ragazzi `matteo-assistenza`, Adulti `matteo-adulti`; sedi `the-quiver`, `colle-oppio`; inclusive `inclusione-gruppo`; compleanni `compleanno`; `attrezzatura`, `pioggia`.
+- `/prenota`: conferma `matteo-cinque`; mese senza orari `calendario`; step Dati `attrezzatura` piccola.
+- `/faq`: accenti per categoria `pioggia` (Prenotazione), `tessera` (Tesseramento), `attrezzatura` (Attrezzatura e pagamenti, nascosta finche' tutte TODO).
 
 ## Tono (voce di @pushandlearn)
 - Diretto, caldo e ironico, ma chiaro. Frasi brevi. Si parla a genitori e adulti principianti, in prima persona (Matteo).
@@ -69,7 +81,8 @@ NON replicare da Savages:
 
 ## Ancora da collegare
 - `/tesseramento` e' un segnaposto.
-- Card F.A.Q. e Collaborazioni non hanno ancora una destinazione (restano `#faq` e `#collaborazioni`). Instagram e' collegato.
+- Card F.A.Q. -> `/faq`. Card Collaborazioni -> Instagram (non c'e' un contatto dedicato). Instagram e' collegato.
+- FAQ con TODO_MATTEO: cosa portare, come si paga, quanto costa una lezione.
 - `CONTATTO_COMPLEANNI` e' TODO_MATTEO: il banner compleanni porta a Instagram.
 - Biografia di `/chi-sono` (`chiSono.bio.testo`) e' TODO_MATTEO: la sezione e' nascosta.
 

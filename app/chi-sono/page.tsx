@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Header } from "@/components/header";
 import { Boxed } from "@/components/Boxed";
 import { Rivela } from "@/components/Rivela";
-import { SplitHeading } from "@/components/SplitHeading";
+import { CtaFinale } from "@/components/sections/CtaFinale";
+import { PageHero } from "@/components/sections/PageHero";
 import { FooterChiaro } from "@/components/sections/FooterChiaro";
 import { chiSono, daCompilare, meta } from "@/content/copy";
 
@@ -20,29 +21,20 @@ const PUPPET: Record<string, { w: number; h: number }> = {
 const TITOLO_SEZIONE = "mb-10 font-display text-4xl leading-tight text-ink md:text-5xl lg:text-6xl";
 
 export default function ChiSonoPage() {
-  const { metodo, perChi, credenziali, bio, finale } = chiSono;
+  const { metodo, perChi, credenziali, bio } = chiSono;
 
   return (
     <>
       <Header trasparente navCentrata boxed />
       <main>
         {/* 1. Banner */}
-        <section className="w-full bg-mustard pb-16 pt-32 lg:pb-24 lg:pt-40">
-          <Boxed>
-            <div className="max-w-3xl">
-              <SplitHeading
-                as="h1"
-                text={chiSono.h1}
-                split={chiSono.h1Split}
-                className="mb-6 text-5xl leading-tight md:text-6xl lg:text-7xl"
-              />
-              <p className="mb-8 max-w-prose text-lg text-ink lg:text-xl">{chiSono.intro}</p>
-              <Link href="/prenota" className="inline-block btn-press rounded-btn bg-ink px-6 py-3 font-semibold text-white">
-                {chiSono.cta}
-              </Link>
-            </div>
-          </Boxed>
-        </section>
+        <PageHero
+          h1={chiSono.h1}
+          h1Split={chiSono.h1Split}
+          testo={chiSono.intro}
+          cta={{ label: chiSono.cta, href: "/prenota" }}
+          immagine={chiSono.immagine}
+        />
 
         {/* 2. Metodo */}
         <section id="metodo" className="w-full scroll-mt-20 bg-[#f4f4f4] py-20 lg:py-24">
@@ -53,7 +45,16 @@ export default function ChiSonoPage() {
             <Rivela ritardo={120}>
               <ol className="grid gap-8 md:grid-cols-3">
                 {metodo.blocchi.map((b, i) => (
-                  <li key={b.titolo} className="card-hard rounded-[20px] bg-white p-7">
+                  <li key={b.titolo} className="card-hard flex flex-col rounded-[20px] bg-white p-7">
+                    {/* Illustrazione di accompagnamento: il testo dice gia' tutto. */}
+                    <Image
+                      src={b.immagine.src}
+                      alt=""
+                      width={b.immagine.w}
+                      height={b.immagine.h}
+                      sizes="(min-width: 768px) 30vw, 80vw"
+                      className="mx-auto mb-5 h-44 w-auto max-w-full object-contain"
+                    />
                     <span
                       aria-hidden="true"
                       className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-mustard font-display text-xl text-ink"
@@ -141,19 +142,7 @@ export default function ChiSonoPage() {
         )}
 
         {/* 6. CTA finale */}
-        <section className="w-full bg-mustard py-20 lg:py-24">
-          <Boxed className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
-            <h2 className="max-w-3xl font-display text-4xl leading-tight text-ink md:text-5xl lg:text-6xl">
-              {finale.h2}
-            </h2>
-            <Link
-              href="/prenota"
-              className="inline-block shrink-0 btn-press rounded-btn bg-ink px-6 py-3 font-semibold text-white"
-            >
-              {finale.cta}
-            </Link>
-          </Boxed>
-        </section>
+        <CtaFinale />
       </main>
       <FooterChiaro />
     </>

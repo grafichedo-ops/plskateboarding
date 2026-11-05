@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Flame, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { caricaDisponibilita, isoDi, type Giorno, type Slot } from "@/lib/prenota/disponibilita";
 import { daISO, dataEstesa, giornoLungo } from "@/lib/prenota/date";
 import type { FasciaId, FormulaId } from "@/lib/prenota/regole";
+import { ILLU } from "@/content/copy";
 
 const SETTIMANA = ["LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM"];
 const MESI_AVANTI = 3;
@@ -162,7 +164,17 @@ export function Calendario({
       )}
 
       {nessunGiorno && !errore && (
-        <p className="text-sm">Nessun orario disponibile in questo mese: prova con il mese successivo.</p>
+        <div className="flex items-center gap-4">
+          <Image
+            src={ILLU.calendario.src}
+            alt=""
+            width={ILLU.calendario.w}
+            height={ILLU.calendario.h}
+            sizes="56px"
+            className="h-auto w-14 shrink-0 object-contain"
+          />
+          <p className="text-sm">Nessun orario disponibile in questo mese: prova con il mese successivo.</p>
+        </div>
       )}
 
       {data && scelto && (

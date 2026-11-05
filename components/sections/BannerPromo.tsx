@@ -16,9 +16,12 @@ import { cn } from "@/lib/utils";
  * `immagine`: assente = nessuna colonna immagine; null = placeholder 4:3
  * "Immagine da inserire" finche' non arriva una foto vera (niente stock,
  * niente immagini generate di bambini).
+ * Le illustrazioni hanno lo sfondo trasparente: si mostrano intere, nelle
+ * proporzioni del file, senza bordo ne' ritaglio.
  */
 
-type Immagine = { src: string; alt: string; w: number; h: number };
+import type { Immagine } from "@/content/copy";
+
 type Logo = Immagine;
 
 const esterno = (href: string) => href.startsWith("http");
@@ -54,7 +57,8 @@ function Media({ immagine }: { immagine: Immagine | null }) {
       alt={immagine.alt}
       width={immagine.w}
       height={immagine.h}
-      className="aspect-[4/3] w-full rounded-card border-2 border-ink object-cover"
+      sizes="(min-width: 1024px) 40vw, 90vw"
+      className="mx-auto h-auto max-h-[420px] w-auto max-w-full object-contain"
     />
   );
 }
@@ -99,16 +103,31 @@ export function BannerPromo({
       <section className="w-full border-b-4 border-mustard bg-ink py-12 lg:py-14">
         <Boxed className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           {contenuto(true)}
-          {loghi && loghi.length > 0 && (
-            // Base bianca: il blu dei loghi sul nero non si legge.
-            <ul className="flex shrink-0 items-center gap-6 self-start rounded-card bg-white px-5 py-4 lg:self-center">
-              {loghi.map((l) => (
-                <li key={l.src}>
-                  <Image src={l.src} alt={l.alt} width={l.w} height={l.h} className="h-11 w-auto" />
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="flex shrink-0 flex-wrap items-end gap-6 self-start lg:flex-nowrap lg:self-center">
+            {loghi && loghi.length > 0 && (
+              // Base bianca: il blu dei loghi sul nero non si legge.
+              <ul className="flex shrink-0 items-center gap-6 rounded-card bg-white px-5 py-4">
+                {loghi.map((l) => (
+                  <li key={l.src}>
+                    <Image src={l.src} alt={l.alt} width={l.w} height={l.h} className="h-11 w-auto" />
+                  </li>
+                ))}
+              </ul>
+            )}
+            {immagine && (
+              // Fondo mustard: il tratto nero dell'illustrazione sparirebbe sul nero.
+              <div className="flex h-44 w-28 shrink-0 items-end justify-center overflow-hidden rounded-card bg-mustard pt-3 lg:h-56 lg:w-36">
+                <Image
+                  src={immagine.src}
+                  alt={immagine.alt}
+                  width={immagine.w}
+                  height={immagine.h}
+                  sizes="144px"
+                  className="h-full w-auto object-contain object-bottom"
+                />
+              </div>
+            )}
+          </div>
         </Boxed>
       </section>
     );
