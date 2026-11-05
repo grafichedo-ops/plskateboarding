@@ -6,18 +6,22 @@ export function SceltaCard({
   value,
   scelta,
   onScegli,
+  compatta = false,
   children,
 }: {
   name: string;
   value: string;
   scelta: boolean;
   onScegli: () => void;
+  /** Altezza ridotta, per scelte secondarie dentro un modulo. */
+  compatta?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <label
       className={cn(
-        "relative flex min-h-[96px] cursor-pointer items-center overflow-hidden rounded-card border-2 border-ink px-5 py-4 shadow-hard-sm transition-press focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-ink hover:-translate-y-0.5",
+        "relative flex cursor-pointer items-center overflow-hidden rounded-card border-2 border-ink shadow-hard-sm transition-press focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-ink hover:-translate-y-0.5",
+        compatta ? "min-h-[64px] px-4 py-3" : "min-h-[96px] px-5 py-4",
         scelta ? "bg-[#ecd66f]" : "bg-white"
       )}
     >

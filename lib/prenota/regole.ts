@@ -13,8 +13,8 @@ export const FASCE: {
   immagine: string;
 }[] = [
   { id: "4-6", titolo: "Bambini", eta: "4-6 anni", descrizione: "primi passi in sicurezza", immagine: "/images/puppet-kids-m.png" },
-  { id: "7-12", titolo: "Bambini", eta: "7-12 anni", descrizione: "basi e confidenza sulla tavola", immagine: "/images/puppet-kids-m.png" },
-  { id: "13-17", titolo: "Ragazzi", eta: "13-17 anni", descrizione: "tecnica, equilibrio e stile", immagine: "/images/puppet-teen-m.png" },
+  { id: "7-12", titolo: "Bambini", eta: "7-12 anni", descrizione: "basi e confidenza sulla tavola", immagine: "/images/puppet-teen-m.png" },
+  { id: "13-17", titolo: "Ragazzi", eta: "13-17 anni", descrizione: "tecnica, equilibrio e stile", immagine: "/images/puppet-boy-busto.png" },
   { id: "adulti", titolo: "Adulti", eta: "18+", descrizione: "inizia o perfeziona la tecnica", immagine: "/images/puppet-adult-m.png" },
 ];
 
@@ -40,4 +40,28 @@ export function fasciaValida(v?: string): FasciaId | null {
 
 export function formulaValida(v: string | undefined, fascia: FasciaId | null): FormulaId | null {
   return formulePer(fascia).find((f) => f.id === v)?.id ?? null;
+}
+
+export const SEDI: Record<string, { indirizzo: string; nota?: string }> = {
+  "The Quiver": { indirizzo: "Via Alessandro Severo 209, Garbatella, Roma" },
+  "Colle Oppio": {
+    indirizzo: "Parco di Colle Oppio, Roma",
+    nota: "Se piove la lezione si sposta al Quiver, in Via Alessandro Severo 209.",
+  },
+};
+
+/**
+ * Prezzi NON ANCORA DEFINITI: restano null finche' Matteo non li comunica.
+ * Il riepilogo mostra "da definire" invece di un numero inventato.
+ */
+const PREZZI: Record<string, number | null> = {
+  corso: null,
+  "privata-singola": null,
+  "privata-coppia": null,
+  "inclusiva-singola": null,
+  "inclusiva-coppia": null,
+};
+
+export function prezzo(formula: FormulaId, formato: FormatoId | null): number | null {
+  return PREZZI[formula === "corso" ? "corso" : `${formula}-${formato}`] ?? null;
 }

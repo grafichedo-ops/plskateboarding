@@ -4,22 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Flame, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { caricaDisponibilita, isoDi, type Giorno, type Slot } from "@/lib/prenota/disponibilita";
+import { daISO, dataEstesa, giornoLungo } from "@/lib/prenota/date";
 import type { FasciaId, FormulaId } from "@/lib/prenota/regole";
 
 const SETTIMANA = ["LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM"];
 const MESI_AVANTI = 3;
 
 const meseAnno = new Intl.DateTimeFormat("it-IT", { month: "long", year: "numeric" });
-const giornoLungo = new Intl.DateTimeFormat("it-IT", { weekday: "long", day: "numeric", month: "long" });
-
-function daISO(iso: string) {
-  const [a, m, g] = iso.split("-").map(Number);
-  return new Date(a, m - 1, g);
-}
-
-function maiuscola(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
 
 /** Celle da lunedi' a domenica: comprende i giorni dei mesi vicini, come nel mockup. */
 function celleDelMese(anno: number, mese: number) {
@@ -177,7 +168,7 @@ export function Calendario({
       {data && scelto && (
         <div>
           <h2 className="font-display text-2xl uppercase">Orari disponibili</h2>
-          <p className="mb-4 mt-1 text-sm">{maiuscola(giornoLungo.format(daISO(data)))}</p>
+          <p className="mb-4 mt-1 text-sm">{dataEstesa(data)}</p>
           <div role="radiogroup" aria-label="Orari disponibili" className="flex flex-wrap gap-3">
             {scelto.slots.map((s) => {
               const attivo = slot?.id === s.id;

@@ -20,7 +20,6 @@ type Modello = { dow: number; inizio: string; fine: string; sede: string; tipo: 
 
 const QUIVER = "The Quiver";
 const COLLE = "Colle Oppio";
-const KIDS: FasciaId[] = ["4-6", "7-12"];
 
 // dow: 0 domenica ... 6 sabato
 const SETTIMANA: Modello[] = [
@@ -28,8 +27,8 @@ const SETTIMANA: Modello[] = [
   { dow: 3, inizio: "10:00", fine: "11:00", sede: COLLE, tipo: "privata" },
   { dow: 5, inizio: "14:00", fine: "15:00", sede: COLLE, tipo: "privata" },
   { dow: 5, inizio: "15:00", fine: "16:00", sede: COLLE, tipo: "privata" },
-  { dow: 3, inizio: "17:00", fine: "18:00", sede: QUIVER, tipo: "corso", fasce: KIDS },
-  { dow: 3, inizio: "18:00", fine: "19:00", sede: QUIVER, tipo: "corso", fasce: KIDS },
+  { dow: 3, inizio: "17:00", fine: "18:00", sede: QUIVER, tipo: "corso", fasce: ["4-6"] },
+  { dow: 3, inizio: "18:00", fine: "19:00", sede: QUIVER, tipo: "corso", fasce: ["7-12"] },
   { dow: 3, inizio: "19:00", fine: "20:00", sede: QUIVER, tipo: "privata" },
   { dow: 4, inizio: "17:00", fine: "18:00", sede: QUIVER, tipo: "corso", fasce: ["4-6"] },
   { dow: 4, inizio: "18:00", fine: "19:00", sede: QUIVER, tipo: "corso", fasce: ["7-12"] },
