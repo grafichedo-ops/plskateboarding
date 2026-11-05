@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { Calendario } from "@/components/prenota/Calendario";
 import { SceltaCard } from "@/components/prenota/SceltaCard";
+import type { Slot } from "@/lib/prenota/disponibilita";
 import {
   FASCE,
   FORMATI,
@@ -20,6 +22,7 @@ const INTESTAZIONI: Record<number, { bianco: string; nero: string; testo: string
   1: { bianco: "CHI", nero: "DEVE IMPARARE?", testo: "Scegli la fascia d'età di chi salirà sulla tavola." },
   2: { bianco: "COME", nero: "VUOI SKATARE?", testo: "Scegli la formula più adatta." },
   3: { bianco: "QUANDO", nero: "SKATIAMO?", testo: "Scegli la data e uno degli orari ancora disponibili." },
+  4: { bianco: "RACCONTACI", nero: "CHI SEI", testo: "Ci servono solo i dati utili per organizzare al meglio la lezione." },
 };
 
 export function PrenotaWizard({
@@ -33,6 +36,8 @@ export function PrenotaWizard({
   const [fascia, setFascia] = useState<FasciaId | null>(fasciaIniziale);
   const [formula, setFormula] = useState<FormulaId | null>(formulaIniziale);
   const [formato, setFormato] = useState<FormatoId | null>(null);
+  const [data, setData] = useState<string | null>(null);
+  const [slot, setSlot] = useState<Slot | null>(null);
   const titolo = useRef<HTMLHeadingElement>(null);
   const primoRender = useRef(true);
 
@@ -46,20 +51,31 @@ export function PrenotaWizard({
     window.scrollTo(0, 0);
   }, [step]);
 
+  const azzeraOrario = () => {
+    setData(null);
+    setSlot(null);
+  };
+
   const scegliFascia = (id: FasciaId) => {
+    if (id !== fascia) azzeraOrario();
     setFascia(id);
     // Da un'altra fascia si puo' arrivare con "corso" scelto: per 13-17 non esiste.
     if (id === "13-17" && formula === "corso") setFormula(null);
   };
 
   const scegliFormula = (id: FormulaId) => {
+    if (id !== formula) azzeraOrario();
     setFormula(id);
     if (id === "corso") setFormato(null);
   };
 
   const formulaAttiva = formulePer(fascia).find((f) => f.id === formula);
   const completo =
-    step === 1 ? !!fascia : step === 2 ? !!formulaAttiva && (!formulaAttiva.serveFormato || !!formato) : false;
+    step === 1 ? !!fascia : step === 2
+          ? !!formulaAttiva && (!formulaAttiva.serveFormato || !!formato)
+          : step === 3
+            ? !!slot
+            : false;
   const testa = INTESTAZIONI[step];
 
   return (
@@ -134,9 +150,23 @@ export function PrenotaWizard({
           </div>
         )}
 
-        {step === 3 && (
+        {step === 3 && fascia && formula && (
+          <Calendario
+            fascia={fascia}
+            formula={formula}
+            data={data}
+            slot={slot}
+            onData={(d) => {
+              setData(d);
+              setSlot(null);
+            }}
+            onSlot={setSlot}
+          />
+        )}
+
+        {step === 4 && (
           <p className="rounded-card border-2 border-ink bg-white p-6 shadow-hard-sm">
-            Il calendario è il prossimo passaggio da costruire.
+            Il modulo dati è il prossimo passaggio da costruire.
           </p>
         )}
       </section>

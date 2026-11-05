@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Boxed } from "@/components/Boxed";
 import { SplitHeading } from "@/components/SplitHeading";
@@ -295,18 +296,18 @@ export function HeroSkaterTracker() {
             {conGrassetti(hero.paragraph, hero.paragraphBold)}
           </p>
           <div className="flex flex-wrap gap-4">
-            <a
+            <Link
               href="/prenota"
               className="btn-press rounded-btn bg-ink px-6 py-3 font-semibold text-white"
             >
               {hero.ctaPrimary}
-            </a>
-            <a
+            </Link>
+            <Link
               href="/#faq"
               className="btn-press rounded-btn bg-white px-6 py-3 font-semibold text-ink"
             >
               {hero.ctaSecondary}
-            </a>
+            </Link>
           </div>
           </div>
         </Boxed>
