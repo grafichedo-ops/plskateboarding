@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Rivela } from "@/components/Rivela";
 import { Check } from "lucide-react";
 import { Boxed } from "@/components/Boxed";
@@ -62,12 +63,12 @@ export function TesseramentoChiaro() {
             ))}
           </ul>
 
-          <a
+          <Link
             href="/tesseramento"
             className="inline-block btn-press rounded-btn bg-ink px-6 py-3 font-semibold text-white"
           >
             {tesseramento.cta}
-          </a>
+          </Link>
         </Rivela>
       </Boxed>
 
@@ -82,7 +83,7 @@ export function TesseramentoChiaro() {
       <div className="relative z-10 -mb-20 mt-12 flex lg:absolute lg:bottom-0 lg:right-[6%] lg:mb-0 lg:mt-0 lg:h-[92%] lg:justify-end">
         <Image
           src="/images/matteo-tesseramento-con-bambino.png"
-          alt="Istruttore P&L che tiene per mano un bambino in piedi sullo skate"
+          alt="Matteo tiene per mano un bambino in piedi sullo skate"
           width={1642}
           height={1804}
           className="h-auto w-[135%] max-w-none shrink-0 object-contain object-bottom lg:h-full lg:w-auto"

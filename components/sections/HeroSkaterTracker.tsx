@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { BadgeCheck } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Boxed } from "@/components/Boxed";
 import { SplitHeading } from "@/components/SplitHeading";
@@ -290,7 +291,7 @@ export function HeroSkaterTracker() {
             as="h1"
             text={hero.h1}
             split={hero.h1Split}
-            className="mb-6 text-5xl md:text-6xl lg:text-7xl"
+            className="mb-6 text-[2.625rem] min-[360px]:text-5xl md:text-6xl lg:text-7xl"
           />
           <p className="mb-8 max-w-prose text-lg text-ink lg:text-xl">
             {conGrassetti(hero.paragraph, hero.paragraphBold)}
@@ -303,12 +304,16 @@ export function HeroSkaterTracker() {
               {hero.ctaPrimary}
             </Link>
             <Link
-              href="/#faq"
+              href={hero.ctaSecondaryHref}
               className="btn-press rounded-btn bg-white px-6 py-3 font-semibold text-ink"
             >
               {hero.ctaSecondary}
             </Link>
           </div>
+          <p className="mt-6 flex items-center gap-2 text-sm font-semibold text-ink">
+            <BadgeCheck aria-hidden="true" size={18} className="shrink-0" />
+            {hero.credenziali}
+          </p>
           </div>
         </Boxed>
 

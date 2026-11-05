@@ -29,18 +29,32 @@ export function FooterChiaro() {
           <div className="grid w-full gap-10 sm:grid-cols-3 lg:max-w-[640px]">
             {footer.columns.map((column) => (
               <div key={column.title}>
-                <h4 className="mb-4 text-sm uppercase tracking-wide text-white/60">
+                {/* h2 e non h4: e' il primo titolo dopo quelli della pagina, i livelli non saltano.
+                    font-sans perche' globals.css da' il font display a tutti gli h2. */}
+                <h2 className="mb-4 font-sans text-sm uppercase leading-normal tracking-wide text-white/60">
                   {column.title}
-                </h4>
+                </h2>
                 <ul className="space-y-2">
                   {column.links.map((link) => (
                     <li key={`${column.title}-${link.label}`}>
-                      <Link
-                        href={link.href}
-                        className="transition-colors hover:text-mustard"
-                      >
-                        {link.label}
-                      </Link>
+                      {link.href.startsWith("http") ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="transition-colors hover:text-mustard"
+                        >
+                          {link.label}
+                          <span className="sr-only"> (si apre in una nuova scheda)</span>
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="transition-colors hover:text-mustard"
+                        >
+                          {link.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

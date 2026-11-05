@@ -46,10 +46,15 @@ export function FaqIgCollabChiaro() {
               {/* mt-auto: la CTA resta in basso anche se le descrizioni hanno
                   lunghezze diverse e le card si allineano in altezza. */}
               <a
-                href={`#${card.id}`}
+                href={card.href}
+                {...(card.href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
                 className="mt-auto inline-block self-start btn-press rounded-btn bg-ink px-6 py-2.5 text-sm font-semibold text-white"
               >
                 {card.cta}
+                <span className="sr-only">
+                  {" "}· {card.title}
+                  {card.href.startsWith("http") && " (si apre in una nuova scheda)"}
+                </span>
               </a>
 
               {/* Riquadro quadrato + object-contain: ogni icona riempie il lato

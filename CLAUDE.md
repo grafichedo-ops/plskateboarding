@@ -11,15 +11,30 @@ Rispondi in italiano, in modo diretto e pratico.
 - Font: Cubano se esiste `public/fonts/Cubano.woff2`, altrimenti Lilita One; Inter per i testi.
 - Stile: illustrato + neo-brutalista (`.btn-press`, `.card-hard`, `shadow-hard-*`).
 - Accessibilita': radio veri o ruoli ARIA, focus visibile, stato mai affidato al solo colore.
-- Pagine: `/` ufficiale, `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
+- Pagine: `/` ufficiale, `/chi-sono`, `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
+- `content/copy.ts` lo legge anche la bozza a scroll: non rinominare gli export e tieni i campi strutturali (`h1Split`, `h1Accent`).
+- Banner homepage: `components/sections/BannerPromo.tsx` (varianti ink, card, mustard). `immagine: null` mostra il placeholder "Immagine da inserire".
+
+## Tono (voce di @pushandlearn)
+- Diretto, caldo e ironico, ma chiaro. Frasi brevi. Si parla a genitori e adulti principianti, in prima persona (Matteo).
+- Riferimenti veri: "Il piedino storto è una prerogativa", "Il cinque è sempre obbligatorio", "La schiena DRITTAAAA (non troppo però ecco)".
+- Niente gergo da agenzia, promesse assolute, toni da influencer, numeri di follower.
+- Non inventare biografia, anni di esperienza, numero allievi, risultati, prezzi, testimonianze, titoli.
+- Titoli confermati: "Istruttore Federale FISR Livello 3" (confermato da Edo) e "Docente e Tecnico per Italian Skateboarding e Skate Italia". Nessun altro.
+- "Inclusivo" resta generico: niente diagnosi o condizioni specifiche. Non citare BEAT.
+- Dato mancante: `TODO_MATTEO` in `content/copy.ts`; `daCompilare()` nasconde il blocco finche' non e' compilato.
+- Foto: solo quelle in `public/images`, niente frame o video presi da Instagram, niente stock, niente immagini generate di bambini. Le foto con minori vanno verificate (liberatoria).
 
 ## Flusso /prenota (5 step)
-File: `components/prenota/`, `lib/prenota/regole.ts`, `lib/prenota/disponibilita.ts`.
+File: `components/prenota/`, `lib/prenota/` (regole, disponibilita, dati, invio, agenda, date).
 1. Chi: 4-6, 7-12, 13-17, Adulti.
 2. Come: Corso, Privata, Inclusiva. Privata e Inclusiva richiedono singola o coppia.
 3. Quando: calendario unico. FATTO, con dati di prova.
-4. Dati: DA FARE. Partecipante; genitore se minore; attrezzatura; note. Nessun campo allergie o salute.
-5. Riepilogo: DA FARE. Prezzo, avviso tessera, privacy, conferma. Poi schermata finale con calendario e disdetta.
+4. Dati: FATTO (`DatiForm.tsx`, `lib/prenota/dati.ts`). Partecipante (due se coppia); genitore se minore, altrimenti contatti dell'adulto; attrezzatura; note. Nessun campo allergie o salute. Niente data di nascita: fa fede la fascia del passaggio 1.
+5. Riepilogo: FATTO (`Riepilogo.tsx`). Prezzo, privacy, conferma. Niente avviso tessera nel form: lo ricorda Matteo o un banner non invasivo. Poi schermata finale (`Conferma.tsx`) con Google Calendar, file .ics (`lib/prenota/agenda.ts`, ora di Roma) e disdetta.
+   - Invio simulato in `lib/prenota/invio.ts`: da sostituire con la POST mantenendo `inviaPrenotazione`. Esito `pieno` rimanda al calendario.
+   - Prezzi in `PREZZI` (`regole.ts`) tutti null: il riepilogo mostra "Da definire".
+   - Manca la pagina dell'informativa privacy da collegare al consenso.
 
 Regole del calendario:
 - Corso: solo corsi per la fascia. Privata: private + corsi della fascia. Inclusiva: solo private.
@@ -30,7 +45,7 @@ Regole del calendario:
 
 Orari:
 - The Quiver (Via Alessandro Severo 209, Garbatella).
-  - Mer 17-18 e 18-19: bambini generico.
+  - Mer 17-18: 4-6; 18-19: 7-12.
   - Gio e Ven 17-18: 4-6; 18-19: 7-12; 19-20: adulti.
 - Colle Oppio: Lun e Mer 10-11, Ven 14-16.
 - BEAT (lun, mar): fuori dal sito per ora.
@@ -54,7 +69,8 @@ NON replicare da Savages:
 
 ## Ancora da collegare
 - `/tesseramento` e' un segnaposto.
-- Instagram, card F.A.Q. e Collaborazioni non hanno ancora una destinazione.
-- `next build` non e' stata ancora eseguita dopo queste modifiche.
+- Card F.A.Q. e Collaborazioni non hanno ancora una destinazione (restano `#faq` e `#collaborazioni`). Instagram e' collegato.
+- `CONTATTO_COMPLEANNI` e' TODO_MATTEO: il banner compleanni porta a Instagram.
+- Biografia di `/chi-sono` (`chiSono.bio.testo`) e' TODO_MATTEO: la sezione e' nascosta.
 
 Riferimenti: board FigJam https://www.figma.com/board/aYZJW6ohvNxGaNF5p1UfIc

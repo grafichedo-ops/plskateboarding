@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Rivela } from "@/components/Rivela";
 import { MapPin } from "lucide-react";
 import { Boxed } from "@/components/Boxed";
@@ -46,12 +47,12 @@ export function DoveFacciamoChiaro() {
             ))}
           </ul>
 
-          <a
+          <Link
             href="/prenota"
             className="inline-block btn-press rounded-btn bg-ink px-6 py-3 font-semibold text-white"
           >
             {doveFacciamo.cta}
-          </a>
+          </Link>
         </Rivela>
       </Boxed>
 
@@ -66,7 +67,7 @@ export function DoveFacciamoChiaro() {
       <div className="-mb-20 mt-12 flex lg:absolute lg:right-0 lg:top-0 lg:mb-0 lg:mt-0 lg:h-[115%] lg:justify-end">
         <Image
           src="/images/matteo-con-ragazzo.png"
-          alt="Istruttore P&L che sostiene un ragazzo in piedi sullo skate su una rampa"
+          alt="Matteo sostiene un ragazzo in piedi sullo skate su una rampa"
           width={1740}
           height={2162}
           className="h-auto w-[135%] max-w-none shrink-0 object-contain object-bottom lg:h-full lg:w-auto"

@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Rivela } from "@/components/Rivela";
 import { Boxed } from "@/components/Boxed";
 import { cn } from "@/lib/utils";
 import { chiSiamo } from "@/content/copy";
 
 /**
- * Seconda sezione di /homepage2: fondo chiaro, testo a sinistra, foto a destra.
+ * Sezione "Chi sono" della homepage: fondo chiaro, testo a sinistra, foto a destra.
  *
  * Diversa dalla ChiSiamo della homepage: li' il titolo e' bianco/nero sul
  * mustard, qui e' giallo/nero su fondo chiaro e le parole in giallo non sono
@@ -26,7 +27,7 @@ export function ChiSiamoChiaro() {
 
   return (
     <section
-      id="chi-siamo"
+      id="chi-sono"
       className="w-full scroll-mt-20 py-20 lg:py-28"
       style={{ backgroundColor: FONDO }}
     >
@@ -48,18 +49,18 @@ export function ChiSiamoChiaro() {
             {chiSiamo.paragraph}
           </p>
 
-          <a
-            href="#chi-siamo"
+          <Link
+            href={chiSiamo.ctaHref}
             className="inline-block btn-press rounded-btn bg-ink px-6 py-3 font-semibold text-white"
           >
             {chiSiamo.cta}
-          </a>
+          </Link>
         </Rivela>
 
         <Rivela ritardo={120} className="flex w-full justify-center lg:w-1/2 lg:justify-end">
           <Image
             src="/images/matteo-con-bambino.png"
-            alt="Istruttore P&L accosciato che affianca un bambino in piedi sullo skate"
+            alt="Matteo, accosciato, tiene d'occhio un bambino in piedi sullo skate"
             width={1534}
             height={1534}
             className="h-auto w-full max-w-[560px] object-contain"

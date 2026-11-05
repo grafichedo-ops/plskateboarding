@@ -21,7 +21,7 @@ import { corsiCarosello } from "@/content/copy";
 const FONDO = "#f7f0de";
 
 /**
- * Dimensioni reali dei PNG: i tre puppet NON hanno la stessa tela
+ * Dimensioni reali dei PNG: i puppet NON hanno la stessa tela
  * (474x702, 504x688, 476x728). Dichiararle uguali farebbe calcolare a
  * next/image un aspect ratio sbagliato per due card su tre.
  */
@@ -29,7 +29,24 @@ const PUPPET: Record<string, { w: number; h: number }> = {
   "/images/puppet-kids-m.png": { w: 474, h: 702 },
   "/images/puppet-teen-m.png": { w: 504, h: 688 },
   "/images/puppet-adult-m.png": { w: 476, h: 728 },
+  "/images/puppet-boy-busto.png": { w: 504, h: 688 },
 };
+
+/**
+ * Le fasce d'eta' ("4-6", "13-17") non devono spezzarsi sul trattino: a 320px
+ * il titolo andava a capo fra "4-" e "6".
+ */
+function senzaACapoNelleEta(titolo: string) {
+  return titolo.split(/(\d+-\d+)/).map((parte, i) =>
+    /^\d+-\d+$/.test(parte) ? (
+      <span key={i} className="whitespace-nowrap">
+        {parte}
+      </span>
+    ) : (
+      parte
+    ),
+  );
+}
 
 /** Di quanto la testa del puppet sborda sopra il bordo alto della card. */
 const SPORGENZA = 80;
@@ -72,30 +89,32 @@ export function CorsiCaroselloChiaro() {
           <article
             key={card.id}
             data-card
-            className="relative w-[85vw] shrink-0 snap-start rounded-[20px] bg-white p-8 shadow-[0_10px_34px_rgba(20,20,20,0.10)] sm:w-[660px]"
+            className="relative w-[85vw] shrink-0 snap-start rounded-[20px] bg-white p-6 shadow-[0_10px_34px_rgba(20,20,20,0.10)] sm:w-[660px] sm:p-8"
           >
             {/* max-w vincolata: tiene il testo fuori dalla colonna del puppet. */}
-            <div className="relative z-10 max-w-[56%] sm:max-w-[340px]">
+            <div className="relative z-10 max-w-[60%] sm:max-w-[340px]">
               <h3 className="mb-3 font-display text-2xl text-ink">
-                {card.title}
+                {senzaACapoNelleEta(card.title)}
               </h3>
               <p className="mb-6 text-sm leading-relaxed text-ink/75">
                 {card.description}
               </p>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 {card.fascia !== "13-17" && (
                   <Link
                     href={`/prenota?fascia=${card.fascia}&formula=corso`}
-                    className="btn-press rounded-btn bg-ink px-6 py-2.5 text-sm font-semibold text-white"
+                    className="btn-press whitespace-nowrap rounded-btn bg-ink px-4 py-2.5 text-sm font-semibold text-white sm:px-6"
                   >
                     {card.ctaPrimary}
+                    <span className="sr-only"> · {card.title}</span>
                   </Link>
                 )}
                 <Link
                   href={`/prenota?fascia=${card.fascia}&formula=privata`}
-                  className="btn-press rounded-btn bg-white px-6 py-2.5 text-sm font-semibold text-ink"
+                  className="btn-press whitespace-nowrap rounded-btn bg-white px-4 py-2.5 text-sm font-semibold text-ink sm:px-6"
                 >
                   {card.ctaSecondary}
+                  <span className="sr-only"> · {card.title}</span>
                 </Link>
               </div>
             </div>
