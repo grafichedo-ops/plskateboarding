@@ -1,0 +1,259 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Cubano — font display/headline. Se public/fonts/Cubano.woff2 non c'e'
+  ancora, il browser fa un 404 su questa url e ricade sul fallback: il sito
+  gira lo stesso, solo con i titoli in sans. Appena metti il file lo prende
+  senza toccare codice.
+*/
+@font-face {
+  font-family: "Cubano";
+  src: url("/fonts/Cubano.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-cubano: "Cubano";
+  --color-mustard: #d19e1b;
+  --color-ink: #141414;
+  --shadow-hard-sm: 4px 4px 0px 0px #141414;
+  --shadow-hard-lg: 8px 8px 0px 0px #141414;
+
+  /*
+    Token shadcn/ui (formato HSL senza hsl(), come da convenzione shadcn)
+    rimappati sulla palette P&L: background = mustard, foreground = ink,
+    primary = ink su bianco (come le CTA di Hero/ChiSiamo/Tesseramento).
+    Li usano i componenti scaricati dal registry (@efferd/header-2,
+    components/ui/button.tsx). Cambia qui, non nei componenti.
+  */
+  --background: 43.2 77.1% 46.3%; /* #D19E1B */
+  --foreground: 0 0% 7.8%; /* #141414 */
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 7.8%;
+  --popover: 43.2 77.1% 46.3%;
+  --popover-foreground: 0 0% 7.8%;
+
+  --primary: 0 0% 7.8%; /* CTA piena: bg-ink / text-white */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 100%; /* CTA secondaria: bg-white / text-ink */
+  --secondary-foreground: 0 0% 7.8%;
+
+  --muted: 46.4 80% 54.5%; /* #E8BE2E — hover tenui sul mustard */
+  --muted-foreground: 0 0% 30%;
+  --accent: 46.4 80% 54.5%;
+  --accent-foreground: 0 0% 7.8%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 7.8%; /* bordi neri 2px del linguaggio neo-brutalist */
+  --input: 0 0% 7.8%;
+  --ring: 0 0% 7.8%;
+}
+
+/*
+  Bottone "a pressione" neo-brutalist: bordo nero 2px + ombra dura,
+  che si "ingoia" al hover/press traslando l'elemento.
+  Usare su tutte le CTA principali (vedi Hero, ChiSiamo, Tesseramento...).
+*/
+.btn-press {
+  border: 2px solid var(--color-ink);
+  box-shadow: var(--shadow-hard-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-press:hover,
+.btn-press:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px var(--color-ink);
+}
+
+/*
+  Card neo-brutalist: bordo nero 2px + ombra dura grande.
+  Usare su card corsi (carosello) e card FAQ/IG/Collaborazioni.
+*/
+.card-hard {
+  border: 2px solid var(--color-ink);
+  box-shadow: var(--shadow-hard-lg);
+}
+
+/*
+  ScrollStage — il palcoscenico dei 7 stop-frame del mockup Figma
+  (vedi components/ScrollStage.tsx).
+
+  Il "pin" e' CSS sticky, non ScrollTrigger `pin: true`: niente pin-spacer,
+  niente salti di layout, e convive senza attriti con l'header sticky.
+  GSAP si occupa solo dello scrub (currentTime del video + dissolvenze),
+  cioe' di cosa succede DENTRO al palcoscenico.
+*/
+.stage {
+  position: relative;
+  /* uno schermo di scroll per ogni stop; --stage-stops lo passa React */
+  height: calc(var(--stage-stops, 7) * 100vh);
+}
+
+.stage-viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/*
+  Tutti i pannelli sono sovrapposti: parte visibile solo il primo.
+  Lo stato iniziale sta qui e non in uno style inline perche' il blocco
+  reduced-motion piu' sotto deve poterlo sovrascrivere.
+  visibility (non solo opacity) tiene link e bottoni dei pannelli nascosti
+  fuori dal focus da tastiera.
+*/
+.stage-panel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.stage-panel[data-first="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/*
+  Reduced motion: niente pin, niente scrub, niente dissolvenze.
+  Le sezioni tornano a impilarsi nel flusso normale, una per schermata.
+  E' tutto CSS, quindi non c'e' flash all'idratazione; ScrollStage legge
+  la stessa media query e salta del tutto la timeline GSAP.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    height: auto;
+  }
+
+  .stage-viewport {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .stage-panel {
+    position: relative;
+    inset: auto;
+    display: flex;
+    min-height: 100vh;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .stage-video {
+    display: none;
+  }
+}
+
+/*
+  Carosello corsi (frame 3): il binario si dissolve ai lati invece di
+  tagliare le card di netto, cosi' si continua a vedere lo skater del
+  palcoscenico dietro. --fade-l / --fade-r li pilota CorsiCarosello.tsx
+  via JS: la sfumatura sparisce sul lato dove non c'e' piu' scroll, altrimenti
+  la prima card risulterebbe slavata anche a inizio lista.
+*/
+.carousel-fade {
+  --fade: 56px;
+  --fade-l: 0px;
+  --fade-r: var(--fade);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--fade-l),
+    #000 calc(100% - var(--fade-r)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--fade-l),
+    #000 calc(100% - var(--fade-r)),
+    transparent 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .carousel-fade {
+    --fade: 110px;
+  }
+}
+
+/*
+  Profondita': solo la card interamente dentro al binario resta piena,
+  quelle che "sbirciano" ai lati si attenuano. L'attributo data-active lo
+  mette un IntersectionObserver con root sul binario stesso.
+*/
+.carousel-card {
+  opacity: 0.45;
+  transition: opacity 0.35s ease;
+}
+
+.carousel-card[data-active] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-card {
+    transition: none;
+  }
+}
+
+/*
+  Comparse legate allo scroll di /homepage2 (vedi components/Rivela.tsx).
+  Nasconde SOLO quando l'attributo vale "false": senza JS l'attributo non
+  cambia mai e il contenuto resta visibile, invece di sparire.
+*/
+.rivela {
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+}
+
+.rivela[data-visibile="false"] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rivela {
+    transition: none;
+  }
+  .rivela[data-visibile="false"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-mustard);
+  color: var(--color-ink);
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-cubano), var(--font-sostituto), sans-serif;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Rispetta le preferenze di riduzione del movimento (vedi ScrollStage.tsx) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
