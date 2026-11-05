@@ -39,14 +39,16 @@ export function DoveFacciamoChiaro() {
             {doveFacciamo.locations.map((location) => (
               <li key={location.name} className="flex items-center gap-4">
                 {/* Accanto al nome della sede: decorativa, il nome e' gia' nel testo. */}
-                <Image
-                  src={location.immagine.src}
-                  alt=""
-                  width={location.immagine.w}
-                  height={location.immagine.h}
-                  sizes="128px"
-                  className="h-auto w-24 shrink-0 object-contain sm:w-32"
-                />
+                <div className="w-24 shrink-0 rounded-card bg-[#f7f0de] p-2 sm:w-32">
+                  <Image
+                    src={location.immagine.src}
+                    alt=""
+                    width={location.immagine.w}
+                    height={location.immagine.h}
+                    sizes="128px"
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 font-display text-xl text-ink">
                     <MapPin aria-hidden="true" size={18} className="shrink-0" />

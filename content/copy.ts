@@ -194,8 +194,6 @@ export const banner = {
       { src: "/images/logo-fisr.webp", alt: "FISR, Federazione Italiana Sport Rotellistici", w: 67, h: 64 },
       { src: "/images/logo-skate-italia.webp", alt: "Skate Italia", w: 99, h: 43 },
     ],
-    // Solo perche' la sezione Chi sono della homepage usa ancora la foto.
-    immagine: ILLU.matteoCiao,
   },
   inclusive: {
     titolo: "LEZIONI INCLUSIVE",

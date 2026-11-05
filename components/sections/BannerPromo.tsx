@@ -40,7 +40,7 @@ function Cta({ href, label, classe }: { href: string; label: string; classe: str
   );
 }
 
-function Media({ immagine }: { immagine: Immagine | null }) {
+function Media({ immagine, riquadro = false }: { immagine: Immagine | null; riquadro?: boolean }) {
   if (!immagine) {
     return (
       <div
@@ -51,7 +51,7 @@ function Media({ immagine }: { immagine: Immagine | null }) {
       </div>
     );
   }
-  return (
+  const img = (
     <Image
       src={immagine.src}
       alt={immagine.alt}
@@ -61,6 +61,7 @@ function Media({ immagine }: { immagine: Immagine | null }) {
       className="mx-auto h-auto max-h-[420px] w-auto max-w-full object-contain"
     />
   );
+  return riquadro ? <div className="rounded-card bg-[#f7f0de] p-5 sm:p-6">{img}</div> : img;
 }
 
 export function BannerPromo({
@@ -71,6 +72,7 @@ export function BannerPromo({
   immagine,
   loghi,
   sfondo = "#f7f0de",
+  riquadro = false,
 }: {
   variante: "ink" | "card" | "mustard";
   titolo: string;
@@ -81,6 +83,8 @@ export function BannerPromo({
   loghi?: readonly Logo[];
   /** Solo per "card": colore della sezione attorno alla card. */
   sfondo?: string;
+  /** Illustrazione dentro un riquadro crema #f7f0de (es. compleanno sul mustard). */
+  riquadro?: boolean;
 }) {
   const conMedia = immagine !== undefined;
 
@@ -155,7 +159,7 @@ export function BannerPromo({
       <Boxed>
         <Rivela className={griglia}>
           {contenuto(false)}
-          {conMedia && <Media immagine={immagine} />}
+          {conMedia && <Media immagine={immagine} riquadro={riquadro} />}
         </Rivela>
       </Boxed>
     </section>

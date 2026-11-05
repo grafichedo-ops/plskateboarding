@@ -206,14 +206,16 @@ export default function CorsiELezioniPage() {
             <ul className="grid gap-10 md:grid-cols-2">
               {doveFacciamo.locations.map((l) => (
                 <li key={l.name}>
-                  <Image
-                    src={l.immagine.src}
-                    alt={l.immagine.alt}
-                    width={l.immagine.w}
-                    height={l.immagine.h}
-                    sizes="(min-width: 768px) 40vw, 90vw"
-                    className="mb-4 h-auto w-full max-w-md object-contain"
-                  />
+                  <div className="mb-4 max-w-md rounded-card bg-[#f7f0de] p-5">
+                    <Image
+                      src={l.immagine.src}
+                      alt={l.immagine.alt}
+                      width={l.immagine.w}
+                      height={l.immagine.h}
+                      sizes="(min-width: 768px) 40vw, 90vw"
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
                   <h3 className="font-display text-2xl text-ink">{l.name}</h3>
                   <p className="mt-1 text-ink/85">{l.address}</p>
                 </li>
@@ -226,7 +228,7 @@ export default function CorsiELezioniPage() {
         <BannerPromo variante="card" {...banner.inclusive} immagine={ILLU.inclusioneGruppo} />
 
         {/* 7. Compleanni */}
-        <BannerPromo variante="mustard" {...banner.compleanni} />
+        <BannerPromo variante="mustard" {...banner.compleanni} riquadro />
 
         {/* 8. Attrezzatura e pioggia */}
         <section className="w-full bg-[#f4f4f4] py-20 lg:py-24">

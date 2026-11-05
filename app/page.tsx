@@ -27,7 +27,7 @@ export default function Home() {
         <BannerPromo variante="card" {...banner.inclusive} />
         <DoveFacciamoChiaro />
         <TesseramentoChiaro />
-        <BannerPromo variante="mustard" {...banner.compleanni} />
+        <BannerPromo variante="mustard" {...banner.compleanni} riquadro />
         <DalleLezioni />
         <FaqIgCollabChiaro />
         <OutroChiaro />

@@ -20,8 +20,8 @@ Rispondi in italiano, in modo diretto e pratico.
 - Banner homepage: `components/sections/BannerPromo.tsx` (varianti ink, card, mustard). `immagine: null` mostra il placeholder "Immagine da inserire".
 
 ## Illustrazioni (`public/images/*.webp`, registro `ILLU` in `content/copy.ts`)
-Sfondo trasparente e tratto nero: sempre `object-contain`, proporzioni del file, niente bordi, ritagli o filtri. Sul nero vanno su un fondo mustard. Alt vuoto quando sono solo un accento. Mai la stessa illustrazione due volte nella stessa schermata.
-- Homepage: banner FISR `matteo-ciao` (solo finche' Chi sono usa la foto `matteo-con-bambino.png`); lezioni inclusive `matteo-assistenza`; compleanni `compleanno`; sedi `the-quiver` e `colle-oppio`; tesseramento `tessera` sopra il titolo.
+Sfondo trasparente e tratto nero: sempre `object-contain`, proporzioni del file, niente bordi, ritagli o filtri. Sul nero vanno su un fondo mustard. `compleanno`, `the-quiver` e `colle-oppio` stanno sempre in un riquadro crema #f7f0de (`riquadro` in BannerPromo). Alt vuoto quando sono solo un accento. Mai la stessa illustrazione due volte nella stessa schermata.
+- Homepage: banner FISR solo loghi, senza illustrazione; lezioni inclusive `matteo-assistenza`; compleanni `compleanno`; sedi `the-quiver` e `colle-oppio`; tesseramento `tessera` sopra il titolo.
 - `/chi-sono`: banner `matteo-ciao`; metodo `matteo-adulti`, `matteo-assistenza`, `matteo-cinque`.
 - `/corsi-e-lezioni`: hero `matteo-ciao` (non `matteo-cinque`: e' gia' nella card Bambini subito sotto); per eta' Bambini `matteo-cinque` (una per le due card), Ragazzi `matteo-assistenza`, Adulti `matteo-adulti`; sedi `the-quiver`, `colle-oppio`; inclusive `inclusione-gruppo`; compleanni `compleanno`; `attrezzatura`, `pioggia`.
 - `/prenota`: conferma `matteo-cinque`; mese senza orari `calendario`; step Dati `attrezzatura` piccola.
