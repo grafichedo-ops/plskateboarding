@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Conferma prima di lasciare la prenotazione.
+ * Conferma prima di lasciare un modulo a passaggi (prenotazione, tesseramento).
  * <dialog> nativo con showModal(): focus intrappolato, Esc per chiudere
  * e resto della pagina inerte senza librerie.
  */
@@ -11,10 +11,14 @@ export function EsciDialog({
   aperto,
   onResta,
   onEsci,
+  testo = "La prenotazione non è ancora confermata: se esci, le scelte fatte finora andranno perse.",
+  etichettaResta = "Continua a prenotare",
 }: {
   aperto: boolean;
   onResta: () => void;
   onEsci: () => void;
+  testo?: string;
+  etichettaResta?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -41,7 +45,7 @@ export function EsciDialog({
           Sei sicuro/a di uscire?
         </h2>
         <p id="esci-testo" className="mt-2 text-sm">
-          La prenotazione non è ancora confermata: se esci, le scelte fatte finora andranno perse.
+          {testo}
         </p>
         <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <button
@@ -58,7 +62,7 @@ export function EsciDialog({
             onClick={onResta}
             className="btn-press rounded-btn bg-ink px-5 py-3 font-semibold text-white"
           >
-            Continua a prenotare
+            {etichettaResta}
           </button>
         </div>
       </div>

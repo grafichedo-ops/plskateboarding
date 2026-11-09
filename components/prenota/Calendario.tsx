@@ -12,6 +12,9 @@ import { ILLU } from "@/content/copy";
 const SETTIMANA = ["LUN", "MAR", "MER", "GIO", "VEN", "SAB", "DOM"];
 const MESI_AVANTI = 3;
 
+/** Blocco degli orari: il wizard ci fa scorrere dopo la scelta della data. */
+export const ID_ORARI = "orari-disponibili";
+
 const meseAnno = new Intl.DateTimeFormat("it-IT", { month: "long", year: "numeric" });
 
 /** Celle da lunedi' a domenica: comprende i giorni dei mesi vicini, come nel mockup. */
@@ -178,7 +181,7 @@ export function Calendario({
       )}
 
       {data && scelto && (
-        <div>
+        <div id={ID_ORARI}>
           <h2 className="font-display text-2xl uppercase">Orari disponibili</h2>
           <p className="mb-4 mt-1 text-sm">{dataEstesa(data)}</p>
           <div role="radiogroup" aria-label="Orari disponibili" className="flex flex-wrap gap-3">

@@ -11,9 +11,11 @@ Rispondi in italiano, in modo diretto e pratico.
 - Font: Cubano se esiste `public/fonts/Cubano.woff2`, altrimenti Lilita One; Inter per i testi.
 - Stile: illustrato + neo-brutalista (`.btn-press`, `.card-hard`, `shadow-hard-*`).
 - Accessibilita': radio veri o ruoli ARIA, focus visibile, stato mai affidato al solo colore.
-- Pagine: `/` ufficiale, `/chi-sono`, `/corsi-e-lezioni`, `/faq`, `/prenota`, `/tesseramento` (segnaposto), `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
+- Moduli (prenotazione, e il tesseramento quando arrivera'): dopo ogni scelta (card, radio, data) la pagina scorre al blocco successivo con `scorriAlProssimo(id)` di `lib/scorri.ts`. Sposta solo la vista, mai il focus. Non serve quando il passo successivo e' il pulsante Continua (sempre visibile in basso).
+- Pagine: `/` ufficiale, `/chi-sono`, `/corsi-e-lezioni`, `/faq`, `/prenota`, `/tesseramento` (modulo a 5 passaggi), `/draft/homepage-scroll` bozza noindex, `/homepage2` redirect a `/` (cartella eliminabile).
 - Menu: Chi sono -> `/chi-sono`, Corsi e Lezioni -> `/corsi-e-lezioni`, Sedi e Orari -> `/corsi-e-lezioni#orari`, F.A.Q. -> `/faq`. Footer Sedi -> `/corsi-e-lezioni#sedi`.
 - Componenti condivisi delle pagine interne: `PageHero` (banner mustard con h1) e `CtaFinale`.
+- Moduli a passaggi: cornice `components/modulo/ModuloShell.tsx`, campi ed errori in `components/modulo/Campi.tsx`, `SceltaCard`, `EsciDialog`. Li usano `/prenota` e `/tesseramento`: le modifiche valgono per entrambi.
 - Animazioni a scroll: pin con CSS sticky, ScrollTrigger solo come progresso (mai `pin: true`), scrub video 1.2 e testi 0.4, GSAP importato dinamicamente. Modelli: `ScrollStage` (bozza) e `ChiSonoScrollBanner`.
 - `/corsi-e-lezioni` legge orari e sedi delle formule da `orarioSettimanale()` e `sediPer()` in `lib/prenota/disponibilita.ts`: nessun orario duplicato. Gli slot `daConfermare` restano prenotabili ma non compaiono negli orari pubblici.
 - `/faq`: `<details>`/`<summary>`; le risposte TODO_MATTEO sono escluse dalla pagina e dal JSON-LD FAQPage, e una categoria senza domande visibili sparisce.
@@ -81,7 +83,7 @@ NON replicare da Savages:
 - Blocco dei minori nel tesseramento: per P&L servono i dati e la firma del genitore.
 
 ## Ancora da collegare
-- `/tesseramento` e' un segnaposto.
+- `/tesseramento`: FATTO con invio simulato (`lib/tesseramento/invio.ts`, da sostituire con la POST mantenendo `inviaTesseramento`). Passaggi: per chi (me/minore), dati (con codice fiscale verificato e genitore se minore), certificato medico (ora o dopo), consensi e firma su canvas (alternativa: firma di persona), riepilogo. La quota mostrata e' `tesseramento.price` di `content/copy.ts`. Mancano: pagine di statuto, regolamento e informativa privacy da collegare ai consensi; nome dell'associazione; istruzioni di pagamento (IBAN). Certificato e firma vanno salvati privati.
 - Card F.A.Q. -> `/faq`. Card Collaborazioni -> Instagram (non c'e' un contatto dedicato). Instagram e' collegato.
 - FAQ con TODO_MATTEO: cosa portare, come si paga, quanto costa una lezione.
 - `CONTATTO_COMPLEANNI` e' TODO_MATTEO: il banner compleanni porta a Instagram.

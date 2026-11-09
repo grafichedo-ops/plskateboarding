@@ -1,18 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, X } from "lucide-react";
-import { Calendario } from "@/components/prenota/Calendario";
+import { Calendario, ID_ORARI } from "@/components/prenota/Calendario";
 import { Conferma } from "@/components/prenota/Conferma";
-import { DatiForm, idCampo } from "@/components/prenota/DatiForm";
-import { EsciDialog } from "@/components/prenota/EsciDialog";
+import { DatiForm } from "@/components/prenota/DatiForm";
+import { AvvisoErrori, focusPrimoErrore } from "@/components/modulo/Campi";
+import { ModuloShell, type Intestazione } from "@/components/modulo/ModuloShell";
+import { EsciDialog } from "@/components/modulo/EsciDialog";
 import { ID_PRIVACY, Riepilogo } from "@/components/prenota/Riepilogo";
-import { SceltaCard } from "@/components/prenota/SceltaCard";
+import { SceltaCard } from "@/components/modulo/SceltaCard";
 import type { Slot } from "@/lib/prenota/disponibilita";
 import { inviaPrenotazione } from "@/lib/prenota/invio";
+import { scorriAlProssimo } from "@/lib/scorri";
 import {
   datiVuoti,
   isMinore,
@@ -33,7 +34,10 @@ import {
 
 const TOTALE_STEP = 5;
 
-const INTESTAZIONI: Record<number, { bianco: string; nero: string; testo: string }> = {
+/** Blocco "In quanti siete?" dello step 2: destinazione dello scorrimento dopo la formula. */
+const ID_FORMATO = "scelta-formato";
+
+const INTESTAZIONI: Record<number, Intestazione> = {
   1: { bianco: "CHI", nero: "DEVE IMPARARE?", testo: "Scegli la fascia d'età di chi salirà sulla tavola." },
   2: { bianco: "COME", nero: "VUOI SKATARE?", testo: "Scegli la formula più adatta." },
   3: { bianco: "QUANDO", nero: "SKATIAMO?", testo: "Scegli la data e uno degli orari ancora disponibili." },
@@ -111,6 +115,8 @@ export function PrenotaWizard({
     if (id !== formula) azzeraOrario();
     setFormula(id);
     if (id === "corso") setFormato(null);
+    // Privata e Inclusiva chiedono anche "In quanti siete?".
+    if (FORMULE.find((f) => f.id === id)?.serveFormato) scorriAlProssimo(ID_FORMATO);
   };
 
   const formulaAttiva = formulePer(fascia).find((f) => f.id === formula);
@@ -171,14 +177,11 @@ export function PrenotaWizard({
       return;
     }
     if (step === 4 && fascia) {
-      const err = validaDati(dati, fascia);
-      const primo = Object.keys(err)[0];
-      if (primo) {
+      const chiavi = Object.keys(validaDati(dati, fascia));
+      if (chiavi.length) {
         setTentato(true);
         // Il campo esiste gia': gli errori cambiano solo il testo, non la struttura.
-        const el = document.getElementById(idCampo(primo));
-        const bersaglio = el?.tagName === "FIELDSET" ? el.querySelector("input") : el;
-        bersaglio?.focus();
+        focusPrimoErrore(chiavi);
         return;
       }
     }
@@ -186,43 +189,24 @@ export function PrenotaWizard({
   }
 
   return (
-    <main className="flex min-h-dvh flex-col bg-[#f7f0de] text-ink">
-      <header className="border-b-2 border-ink bg-mustard">
-        <div className="mx-auto w-full max-w-2xl px-4 pb-5 pt-5 md:px-6">
-          <div className="flex items-center justify-between gap-4">
-            <Link href="/" onClick={intercettaUscita} className="font-display text-lg uppercase">
-              P&amp;L Skateboarding
-            </Link>
-            {step <= TOTALE_STEP && (
-              <div className="flex items-center gap-3">
-                <span
-                  aria-label={`Passaggio ${step} di ${TOTALE_STEP}`}
-                  className="rounded-full border-2 border-ink bg-white px-3 py-0.5 text-xs font-bold"
-                >
-                  {step} di {TOTALE_STEP}
-                </span>
-                <Link
-                  href="/"
-                  onClick={intercettaUscita}
-                  aria-label="Esci dalla prenotazione"
-                  className="btn-press flex h-10 items-center gap-1.5 rounded-full bg-white px-3 text-sm font-semibold"
-                >
-                  <X aria-hidden="true" size={18} strokeWidth={2.5} />
-                  <span className="hidden sm:inline">Esci</span>
-                </Link>
-              </div>
-            )}
-          </div>
-          <h1 ref={titolo} tabIndex={-1} className="mt-3 font-display text-3xl leading-tight outline-none md:text-4xl">
-            <span className="text-white">{testa.bianco}</span> {testa.nero}
-          </h1>
-          <p className="mt-1 text-sm">{testa.testo}</p>
-        </div>
-      </header>
-
-      <section className="mx-auto w-full max-w-2xl flex-1 px-4 py-8 md:px-6">
+    <>
+      <ModuloShell
+        intestazione={testa}
+        step={step}
+        totale={TOTALE_STEP}
+        titoloRef={titolo}
+        onUscita={intercettaUscita}
+        etichettaUscita="Esci dalla prenotazione"
+        indietro={step === 1 ? null : { onClick: () => setStep(step - 1), disabled: invio === "invio" }}
+        avanti={{
+          etichetta: step < TOTALE_STEP ? "Continua" : invio === "invio" ? "Invio in corso…" : "Conferma prenotazione",
+          onClick: avanti,
+          disabled: !completo,
+          busy: invio === "invio",
+        }}
+      >
         {step === 1 && (
-          <fieldset className="grid gap-4 sm:grid-cols-2">
+          <fieldset className="grid gap-4">
             <legend className="sr-only">Fascia d&apos;età</legend>
             {FASCE.map((f) => (
               <SceltaCard key={f.id} name="fascia" value={f.id} scelta={fascia === f.id} onScegli={() => scegliFascia(f.id)}>
@@ -256,7 +240,7 @@ export function PrenotaWizard({
             </fieldset>
 
             {formulaAttiva?.serveFormato && (
-              <fieldset>
+              <fieldset id={ID_FORMATO}>
                 <legend className="mb-3 font-display text-xl">In quanti siete?</legend>
                 <div className="grid grid-cols-2 gap-4">
                   {FORMATI.map((f) => (
@@ -279,6 +263,7 @@ export function PrenotaWizard({
             onData={(d) => {
               setData(d);
               setSlot(null);
+              scorriAlProssimo(ID_ORARI);
             }}
             onSlot={setSlot}
           />
@@ -286,17 +271,7 @@ export function PrenotaWizard({
 
         {step === 4 && fascia && (
           <>
-            <p
-              role="status"
-              className={
-                numeroErrori
-                  ? "mb-6 rounded-card border-2 border-red-700 bg-red-50 p-4 text-sm font-semibold text-red-700"
-                  : "sr-only"
-              }
-            >
-              {numeroErrori > 0 &&
-                (numeroErrori === 1 ? "C'è un campo da sistemare." : `Ci sono ${numeroErrori} campi da sistemare.`)}
-            </p>
+            <AvvisoErrori numero={numeroErrori} />
             <DatiForm fascia={fascia} dati={dati} errori={errori} onChange={setDati} />
           </>
         )}
@@ -341,39 +316,8 @@ export function PrenotaWizard({
             email={isMinore(fascia) ? dati.genitore.email : dati.contatti.email}
           />
         )}
-      </section>
-
-      {step <= TOTALE_STEP && (
-        <footer className="sticky bottom-0 border-t-2 border-ink bg-white">
-          <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-4 md:px-6">
-            {step === 1 ? (
-              <Link href="/" onClick={intercettaUscita} aria-label="Torna al sito" className="btn-press flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                <ArrowLeft size={20} />
-              </Link>
-            ) : (
-              <button
-                type="button"
-                aria-label="Passaggio precedente"
-                disabled={invio === "invio"}
-                onClick={() => setStep(step - 1)}
-                className="btn-press flex h-12 w-12 items-center justify-center rounded-full bg-white disabled:opacity-40"
-              >
-                <ArrowLeft size={20} />
-              </button>
-            )}
-            <button
-              type="button"
-              disabled={!completo}
-              onClick={avanti}
-              aria-busy={invio === "invio"}
-              className="rounded-btn bg-ink px-8 py-3 font-semibold text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {step < TOTALE_STEP ? "Continua" : invio === "invio" ? "Invio in corso…" : "Conferma prenotazione"}
-            </button>
-          </div>
-        </footer>
-      )}
+      </ModuloShell>
       <EsciDialog aperto={chiediUscita} onResta={() => setChiediUscita(false)} onEsci={() => router.push("/")} />
-    </main>
+    </>
   );
 }
