@@ -5,6 +5,7 @@
 // risponde "pieno" e il wizard rimanda al calendario.
 
 import type { DatiPrenotazione } from "@/lib/prenota/dati";
+import type { Modalita, Pacchetto } from "@/lib/prenota/pacchetto";
 import type { FasciaId, FormatoId, FormulaId } from "@/lib/prenota/regole";
 
 export type Prenotazione = {
@@ -13,6 +14,10 @@ export type Prenotazione = {
   formato: FormatoId | null;
   data: string;
   slotId: string;
+  /** Solo per i corsi: lezione singola o pacchetto mensile. */
+  modalita: Modalita | null;
+  /** Date a lezione nel mese in corso e date del pacchetto: il backend le prenota tutte. */
+  pacchetto: Pacchetto | null;
   dati: DatiPrenotazione;
   privacy: true;
 };

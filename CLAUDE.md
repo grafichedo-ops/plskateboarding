@@ -45,10 +45,11 @@ File: `components/prenota/`, `lib/prenota/` (regole, disponibilita, dati, invio,
 1. Chi: 4-6, 7-12, 13-17, Adulti.
 2. Come: Corso, Privata, Inclusiva. Privata e Inclusiva richiedono singola o coppia.
 3. Quando: calendario unico. FATTO, con dati di prova.
+   - Orario di corso (fiamma): si apre la modale `SceltaPacchetto` "Solo questo giorno" (20 euro) o "Pacchetto mensile" (60 euro al mese invece di 80, `PACCHETTO_MENSILE` in `regole.ts`). Regola in `lib/prenota/pacchetto.ts`: le lezioni rimaste nel mese della data scelta si pagano a lezione, dal mese dopo scatta il pacchetto; se la data e' la prima lezione del mese il pacchetto parte subito (da confermare con Matteo). Stesso giorno della settimana, orario e sede; esclusi assenze e pieni.
 4. Dati: FATTO (`DatiForm.tsx`, `lib/prenota/dati.ts`). Partecipante (due se coppia); genitore se minore, altrimenti contatti dell'adulto; attrezzatura; note. Nessun campo allergie o salute. Niente data di nascita: fa fede la fascia del passaggio 1.
 5. Riepilogo: FATTO (`Riepilogo.tsx`). Prezzo, privacy, conferma. Niente avviso tessera nel form: lo ricorda Matteo o un banner non invasivo. Poi schermata finale (`Conferma.tsx`) con Google Calendar, file .ics (`lib/prenota/agenda.ts`, ora di Roma) e disdetta.
    - Invio simulato in `lib/prenota/invio.ts`: da sostituire con la POST mantenendo `inviaPrenotazione`. Esito `pieno` rimanda al calendario.
-   - Prezzi in `PREZZI` (`regole.ts`) tutti null: il riepilogo mostra "Da definire".
+   - Prezzi in `PREZZI` (`regole.ts`): corso 20 euro a lezione; privata e inclusiva ancora null, il riepilogo mostra "Da definire".
    - Manca la pagina dell'informativa privacy da collegare al consenso.
 
 Regole del calendario:
@@ -66,7 +67,7 @@ Orari:
 - BEAT (lun, mar): fuori dal sito per ora.
 
 Assunzioni da confermare: corso a data singola; Ven 14-16 diviso in due lezioni da un'ora; privata Quiver Mer 19-20 (segnaposto).
-Prezzi, posti, IBAN, associazione e mittente non sono definiti: non inventarli.
+Prezzi di privata e inclusiva, posti, IBAN, associazione e mittente non sono definiti: non inventarli.
 
 ## Backend
 Stessa architettura di `../savages-site/apps-script/Backend.gs`: Google Sheet + Apps Script, ma Sheet, script, mittente e IBAN separati.

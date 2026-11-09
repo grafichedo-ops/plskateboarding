@@ -51,11 +51,12 @@ export const SEDI: Record<string, { indirizzo: string; nota?: string }> = {
 };
 
 /**
- * Prezzi NON ANCORA DEFINITI: restano null finche' Matteo non li comunica.
- * Il riepilogo mostra "da definire" invece di un numero inventato.
+ * Prezzi: null finche' Matteo non li comunica, e il riepilogo mostra
+ * "da definire" invece di un numero inventato.
+ * Corso: 20 euro a lezione (da Edo, 9 novembre 2026).
  */
 const PREZZI: Record<string, number | null> = {
-  corso: null,
+  corso: 20,
   "privata-singola": null,
   "privata-coppia": null,
   "inclusiva-singola": null,
@@ -65,3 +66,6 @@ const PREZZI: Record<string, number | null> = {
 export function prezzo(formula: FormulaId, formato: FormatoId | null): number | null {
   return PREZZI[formula === "corso" ? "corso" : `${formula}-${formato}`] ?? null;
 }
+
+/** Pacchetto mensile del corso: prezzo pieno barrato e prezzo scontato (da Edo, 9 novembre 2026). */
+export const PACCHETTO_MENSILE = { listino: 80, prezzo: 60 };

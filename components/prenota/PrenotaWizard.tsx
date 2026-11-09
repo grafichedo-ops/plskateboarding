@@ -10,6 +10,8 @@ import { AvvisoErrori, focusPrimoErrore } from "@/components/modulo/Campi";
 import { ModuloShell, type Intestazione } from "@/components/modulo/ModuloShell";
 import { EsciDialog } from "@/components/modulo/EsciDialog";
 import { ID_PRIVACY, Riepilogo } from "@/components/prenota/Riepilogo";
+import { RecapPacchetto, SceltaPacchetto, formattaEuro } from "@/components/prenota/SceltaPacchetto";
+import type { Modalita, Pacchetto } from "@/lib/prenota/pacchetto";
 import { SceltaCard } from "@/components/modulo/SceltaCard";
 import type { Slot } from "@/lib/prenota/disponibilita";
 import { inviaPrenotazione } from "@/lib/prenota/invio";
@@ -27,6 +29,7 @@ import {
   FORMATI,
   FORMULE,
   formulePer,
+  prezzo,
   type FasciaId,
   type FormatoId,
   type FormulaId,
@@ -36,6 +39,9 @@ const TOTALE_STEP = 5;
 
 /** Blocco "In quanti siete?" dello step 2: destinazione dello scorrimento dopo la formula. */
 const ID_FORMATO = "scelta-formato";
+
+/** Riquadro con la scelta singola/pacchetto, sotto gli orari. */
+const ID_MODALITA = "scelta-modalita";
 
 const INTESTAZIONI: Record<number, Intestazione> = {
   1: { bianco: "CHI", nero: "DEVE IMPARARE?", testo: "Scegli la fascia d'età di chi salirà sulla tavola." },
@@ -60,6 +66,10 @@ export function PrenotaWizard({
   const [formato, setFormato] = useState<FormatoId | null>(null);
   const [data, setData] = useState<string | null>(null);
   const [slot, setSlot] = useState<Slot | null>(null);
+  // Corso: lezione singola o pacchetto mensile, scelti nella modale dopo l'orario.
+  const [modalita, setModalita] = useState<Modalita | null>(null);
+  const [pacchetto, setPacchetto] = useState<Pacchetto | null>(null);
+  const [slotInAttesa, setSlotInAttesa] = useState<Slot | null>(null);
   const [dati, setDati] = useState<DatiPrenotazione>(datiVuoti);
   // Gli errori compaiono solo dopo il primo "Continua" sullo step 4.
   const [tentato, setTentato] = useState(false);
@@ -99,9 +109,26 @@ export function PrenotaWizard({
   const errori = tentato && fascia ? validaDati(dati, fascia) : {};
   const numeroErrori = Object.keys(errori).length;
 
+  const azzeraSlot = () => {
+    setSlot(null);
+    setModalita(null);
+    setPacchetto(null);
+  };
+
   const azzeraOrario = () => {
     setData(null);
-    setSlot(null);
+    azzeraSlot();
+  };
+
+  /** Un orario di corso apre la modale singola/pacchetto; gli altri si scelgono subito. */
+  const scegliSlot = (s: Slot) => {
+    if (s.tipo === "corso") {
+      setSlotInAttesa(s);
+      return;
+    }
+    setSlot(s);
+    setModalita(null);
+    setPacchetto(null);
   };
 
   const scegliFascia = (id: FasciaId) => {
@@ -119,12 +146,13 @@ export function PrenotaWizard({
     if (FORMULE.find((f) => f.id === id)?.serveFormato) scorriAlProssimo(ID_FORMATO);
   };
 
+  const prezzoCorso = prezzo("corso", null) ?? 0;
   const formulaAttiva = formulePer(fascia).find((f) => f.id === formula);
   const completo =
     step === 1 ? !!fascia : step === 2
           ? !!formulaAttiva && (!formulaAttiva.serveFormato || !!formato)
           : step === 3
-            ? !!slot
+            ? !!slot && (slot.tipo !== "corso" || !!modalita)
             : step === 4 || (step === 5 && invio !== "invio");
   const testa = INTESTAZIONI[step];
 
@@ -143,6 +171,8 @@ export function PrenotaWizard({
         formato: formatoEffettivo,
         data,
         slotId: slot.id,
+        modalita: slot.tipo === "corso" ? modalita : null,
+        pacchetto: modalita === "pacchetto" ? pacchetto : null,
         dati,
         privacy: true,
       });
@@ -166,7 +196,7 @@ export function PrenotaWizard({
   };
 
   const altroOrario = () => {
-    setSlot(null);
+    azzeraSlot();
     setInvio("pronto");
     setStep(3);
   };
@@ -262,11 +292,33 @@ export function PrenotaWizard({
             slot={slot}
             onData={(d) => {
               setData(d);
-              setSlot(null);
+              azzeraSlot();
               scorriAlProssimo(ID_ORARI);
             }}
-            onSlot={setSlot}
+            onSlot={scegliSlot}
           />
+        )}
+
+        {step === 3 && slot?.tipo === "corso" && modalita && (
+          <div id={ID_MODALITA} className="mt-6 flex items-start justify-between gap-4 rounded-card border-2 border-ink bg-white p-4 shadow-hard-sm">
+            <p className="min-w-0 text-sm">
+              <span className="block font-display text-lg">
+                {modalita === "singola" ? "Solo questo giorno" : "Pacchetto mensile"}
+              </span>
+              {modalita === "singola" ? (
+                <span>Una lezione · {formattaEuro(prezzoCorso)}</span>
+              ) : (
+                pacchetto && <RecapPacchetto p={pacchetto} />
+              )}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSlotInAttesa(slot)}
+              className="shrink-0 rounded-full px-2 py-1 text-sm font-semibold underline underline-offset-4"
+            >
+              Cambia
+            </button>
+          </div>
         )}
 
         {step === 4 && fascia && (
@@ -298,6 +350,8 @@ export function PrenotaWizard({
               formato={formatoEffettivo}
               data={data}
               slot={slot}
+              modalita={slot.tipo === "corso" ? modalita : null}
+              pacchetto={pacchetto}
               dati={dati}
               privacy={privacy}
               erroreprivacy={tentatoPrivacy && !privacy}
@@ -317,6 +371,22 @@ export function PrenotaWizard({
           />
         )}
       </ModuloShell>
+      {fascia && (
+        <SceltaPacchetto
+          slot={slotInAttesa}
+          data={data}
+          fascia={fascia}
+          iniziale={slotInAttesa?.id === slot?.id ? modalita : null}
+          onConferma={(m, p) => {
+            setSlot(slotInAttesa);
+            setModalita(m);
+            setPacchetto(p);
+            setSlotInAttesa(null);
+            scorriAlProssimo(ID_MODALITA);
+          }}
+          onAnnulla={() => setSlotInAttesa(null)}
+        />
+      )}
       <EsciDialog aperto={chiediUscita} onResta={() => setChiediUscita(false)} onEsci={() => router.push("/")} />
     </>
   );
